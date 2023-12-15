@@ -1,17 +1,19 @@
-FROM node:18-alpine as base
+# Use Node.js v14
+FROM node:14
 
-WORKDIR /src
-COPY package*.json /
+# Create app directory
+WORKDIR /usr/src/app
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
+
+RUN npm install
+
+# Bundle app source
+COPY . .
+
+# Expose the port
 EXPOSE 3000
 
-FROM base as production
-ENV NODE_ENV=production
-RUN npm ci
-COPY . /
-CMD ["node", "bin/www"]
-
-FROM base as dev
-ENV NODE_ENV=development
-RUN npm install -g nodemon && npm install
-COPY . /
-CMD ["nodemon", "bin/www"]
+CMD [ "node", "app.js" ]

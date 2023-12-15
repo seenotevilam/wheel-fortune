@@ -1,7 +1,7 @@
 class VariantListView {
     constructor(label, element, title, eventManager, variantList) {
         this._list = new List(label, {
-            valueNames: ['label', 'id', 'hasPicked']
+            valueNames: ['label', 'id', 'isDrawn']
         });
         this._eventManager = eventManager;
         this._variantList = variantList;
@@ -37,9 +37,9 @@ class VariantListView {
         this._list.add(variantsObject);
         this._list.items.forEach(function (item) {
             let values = item.values();
-            let hasPicked = values.hasPicked;
+            let isDrawn = values.isDrawn;
 
-            if (hasPicked) {
+            if (isDrawn) {
                 let element = $(item.elm);
                 element
                     .addClass('anime__review__item__text_active')
@@ -54,9 +54,9 @@ class VariantListView {
             if (variant instanceof Variant) {
                 variantsListElements.push(
                     {
-                        'label': variant.label,
+                        'label': variant.id +  1 +' ' + variant.label,
                         'id': variant.id,
-                        'hasPicked': variant.hasPicked,
+                        'isDrawn': variant.isDrawn,
                         'color': variant.color
                     }
                 );

@@ -1,9 +1,8 @@
 class WheelView {
-    constructor(element, eventManager, state) {
+    constructor(element, eventManager, variantList, wheel) {
         this._eventManager = eventManager;
-        this.state = state;
-        this._variantList = state.variantList;
-        this.isRunning = false;
+        this._wheel = wheel;
+        this._variantList = variantList;
         this._initEvents();
         this._initViewElements(element);
         this._update();
@@ -17,29 +16,37 @@ class WheelView {
     _initEvents() {
         let self = this;
         this._eventManager.subscribe('variant.added', function () {
-            self.state.wheelDegrees = 0;
+            if (self._variantList.lastDrawn.id > 0) {
+                return;
+            }
+
+            self._wheel.degrees = 0;
             self._update();
         });
 
         this._eventManager.subscribe('variant.deleted', function (event, eventData) {
-            let variant = eventData.value;
-            if (variant.hasPicked && variant.id !== self._variantList.lastPicked.id) {
+            if (self._variantList.lastDrawn.id >= 0) {
                 return;
             }
-            self.state.wheelDegrees = 0;
+
+            self._wheel.degrees = 0;
             self._update();
         });
 
         this._eventManager.subscribe('variant.randomize', function (event, eventData) {
             let variant = eventData.value;
-            self.state.wheelDegrees = 0;
-            self._update();
+            self._wheel.degrees = 0;
+            self._update(variant);
             self._run(variant);
         });
     }
 
     _update() {
-        let variantsForRenderSectors = this._getVariantsForRenderSectors(this._variantList.variants);
+        if (this._wheel.isRunning) {
+            return;
+        }
+
+        let variantsForRenderSectors = this._getVariantsForRenderSectors(this._variantList.variants, this._variantList.lastDrawn);
         let angleSectionPercent = Math.round(100 / variantsForRenderSectors.length);
         this._render(variantsForRenderSectors, angleSectionPercent);
     }
@@ -66,15 +73,10 @@ class WheelView {
     _render(variantsForRenderSectors, angleSectionPercent) {
         let self = this;
 
-        if (variantsForRenderSectors.length <= 1) {
-            this._$block.hide();
-            return;
-        }
-
         this._$block.show();
         this._$wheelContainer.html(this._template());
         this._$dram = $(this._$wheelContainer.find('.wheel_drum').get(0));
-        this._$dram.css('transform', 'rotate(' + this.state.wheelDegrees + 'deg)')
+        this._$dram.css('transform', 'rotate(' + this._wheel.degrees + 'deg)')
 
         this._$text = $(this._$wheelContainer.find('.wheel_text').get(0));
 
@@ -99,16 +101,21 @@ class WheelView {
         });
 
         this._$dram.css('background-image', 'conic-gradient(' + gradient + ')');
+
+        if (variantsForRenderSectors.length <= 1 && this._variantList.lastDrawn.id < 0) {
+            this._$block.hide();
+        }
+
     }
 
     _run(winnerVariant) {
         let self = this;
 
-        if (this.isRunning) {
+        if (this._wheel.isRunning) {
             return;
         }
 
-        let variantsForRenderSectors = this._getVariantsForRenderSectors(this._variantList.variants);
+        let variantsForRenderSectors = this._getVariantsForRenderSectors(this._variantList.variants, winnerVariant);
 
         if (variantsForRenderSectors.length === 1) {
             return;
@@ -117,7 +124,7 @@ class WheelView {
         let winnerIndex = this._getWinnerIndex(variantsForRenderSectors, winnerVariant);
         let deltaDegrees = this._calculateDeltaDegrees(variantsForRenderSectors, winnerIndex);
 
-        this.isRunning = true;
+        this._wheel.isRunning = true;
 
         $({deg: 0}).animate({deg: deltaDegrees}, {
             duration: 10000,
@@ -127,9 +134,8 @@ class WheelView {
                 });
             },
             complete: function () {
-                self.isRunning = false;
-                self.state.wheelDegrees = deltaDegrees;
-                winnerVariant.hasPicked = true;
+                self._wheel.isRunning = false;
+                self._wheel.degrees = deltaDegrees;
                 self._eventManager.publish(new Event('variant.randomized', winnerVariant));
             }
         });
@@ -138,18 +144,14 @@ class WheelView {
     _createLi(rotate, variant) {
         return $('<li></li>')
             .css('transform', 'rotate(' + rotate + 'deg)')
-            .html(variant.label);
+            .html(variant.id + 1);
     }
 
-    _getVariantsForRenderSectors(variants) {
-        let self = this;
+    _getVariantsForRenderSectors(variants, winnerVariant = null) {
         let filterVariants = [];
 
         variants.forEach(function (variant) {
-            let isVariantForView = !variant.hasPicked ||
-                (self._variantList.lastPicked !== null && self._variantList.lastPicked.id === variant.id);
-
-            if (isVariantForView) {
+            if (!variant.isDrawn || winnerVariant !== null && winnerVariant.id === variant.id) {
                 filterVariants.push(variant);
             }
         })

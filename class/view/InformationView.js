@@ -1,14 +1,10 @@
 class InformationView {
-    constructor(element, eventManager, currentVariant = null) {
+    constructor(element, eventManager, currentVariant) {
         this._currentVaraint = currentVariant;
         this._eventManager = eventManager;
         this._$alert = $(element.find('.Alert').get(0));
         this._initEvents();
-
-        if (this._currentVaraint.id > 0) {
-            this._show(this._currentVaraint);
-        }
-
+        this._show(currentVariant);
     }
 
     _initEvents() {
@@ -25,7 +21,6 @@ class InformationView {
         this._eventManager.subscribe('variant.deleted', function (event, eventData) {
             let variant = eventData.value;
             if (variant.id === self._currentVaraint.id) {
-                self._currentVaraint.id = -1;
                 self._hide();
             }
         });
@@ -36,8 +31,12 @@ class InformationView {
     }
 
     _show(variant) {
-        this._$alert.show();
+        if (variant.id < 0) {
+            return "";
+        }
+
         this._$alert.css('color', variant.color);
         this._$alert.html("Выпало " + variant.label);
+        this._$alert.show();
     }
 }

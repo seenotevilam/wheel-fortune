@@ -1,9 +1,8 @@
-class VariantList
-{
-    constructor(label, lastPicked, variants = []) {
+class VariantList {
+    constructor(label, lastDrawn = null, variants = []) {
         this._label = label;
         this._variants = variants;
-        this._lastPicked = lastPicked;
+        this._lastDrawn = lastDrawn === null ? new Variant() : lastDrawn;
     }
 
     get label() {
@@ -14,46 +13,46 @@ class VariantList
         return this._variants;
     }
 
-    get lastPicked() {
-        return this._lastPicked;
+    get lastDrawn() {
+        return this._lastDrawn;
     }
 
-    getNoPicked() {
-        let noPicked = [];
-        this._variants.forEach(function (variant){
-            if(!variant.hasPicked) {
-                noPicked.push(variant);
+    noDrawnVariants() {
+        let noDrawnVariants = [];
+        this._variants.forEach(function (variant) {
+            if (!variant.isDrawn) {
+                noDrawnVariants.push(variant);
             }
         });
 
-        return noPicked;
+        return noDrawnVariants;
     }
 
-    addVariant(variant) {
+    add(variant) {
         if (!variant instanceof Variant) {
             return;
         }
         this._variants.push(variant);
     }
 
-    set lastPicked(variant) {
-        this._lastPicked = variant;
+    set lastDrawn(lastDrawn) {
+        this._lastDrawn = lastDrawn;
     }
 
-    getColors() {
+    get colors() {
         let colors = [];
-        this._variants.forEach(function (variant){
+        this._variants.forEach(function (variant) {
             colors.push(variant.color);
         });
 
         return colors;
     }
 
-    deleteVariant(id) {
+    delete(id) {
         this._variants.splice(id, 1);
 
         let index = 0;
-        this._variants.forEach(function (variant){
+        this._variants.forEach(function (variant) {
             variant.id = index;
             index++;
         });

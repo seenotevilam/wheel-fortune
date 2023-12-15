@@ -1,9 +1,8 @@
-class Variant
-{
-    constructor(id = -1, label = "", color = "", hasPicked = false) {
-        this._label = label;
-        this._hasPicked = hasPicked;
+class Variant {
+    constructor(id = -1, label = "", color = "", isDrawn = false) {
         this._id = id;
+        this._label = label;
+        this._isDrawn = isDrawn;
         this._color = color;
     }
 
@@ -11,8 +10,8 @@ class Variant
         return this._label;
     }
 
-    get hasPicked() {
-        return this._hasPicked;
+    get isDrawn() {
+        return this._isDrawn;
     }
 
     get id() {
@@ -27,8 +26,8 @@ class Variant
         this._color = color;
     }
 
-    set hasPicked(state) {
-        this._hasPicked = state;
+    set isDrawn(isDrawn) {
+        this._isDrawn = isDrawn;
     }
 
     set id(id) {

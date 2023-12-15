@@ -118,9 +118,10 @@ ol {
 }
 
 .wheel_drum_container {
-	width: 400px;
-	height: 400px;
+	width: 370px;
+	height: 370px;
 	display: block;
+	margin: auto;
 }
 
 .section-title h4,
@@ -2353,12 +2354,16 @@ ol {
 }
 
 .wheel {
-	width: 400px;
-	height: 400px;
+	width: 370px;
+	height: 370px;
 	border-radius: 50%;
 	display: block;
 	border: 1px solid black;
 	margin: auto auto 30px;
+}
+
+.randomVariantButton {
+	margin-top: 45px;
 }
 
 .arrow {
@@ -2396,22 +2401,19 @@ ol {
 }
 
 .wheel_text > li {
-	/* включаем «гибкую» вёрстку */
 	display: flex;
 	align-items: center;
 	position: absolute;
 	top: 25%;
-	font-style: italic;
 	color: white;
-	padding-left: 20px;
+	font-weight: bold;
+	padding-left: 55px;
+	padding-right: 15px;
 	text-transform: lowercase;
-	/* устанавливаем размеры */
 	width: 50%;
 	height: 50%;
-	/* устанавливаем координаты, относительно которых будем вращать текст */
+	font-size: 24px;
 	transform-origin: center right;
-	/* поворачиваем текст */
-	/* запрещаем пользователю выделять мышкой текст на секторах */
 	user-select: none;
 
 }

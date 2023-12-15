@@ -1,10 +1,14 @@
 class UserInterfaceView
 {
-    constructor(elementList, eventManager) {
+    constructor(elementList, eventManager, isBlocked = false) {
         this._elementList = elementList;
         this._eventManager = eventManager;
+        this._isBlocked = isBlocked;
         this._initButtons();
         this._initEvents();
+        if (isBlocked) {
+            this._block(true);
+        }
     }
 
     _initButtons() {
@@ -15,24 +19,51 @@ class UserInterfaceView
     }
 
     _initEvents() {
+        let self = this;
         if (!this._eventManager instanceof EventManager) {
             return;
         }
+
+        this._eventManager.subscribe('clicked.variant.randomize', function (event, eventData) {
+            self._block(true);
+        });
+
+        this._eventManager.subscribe('variant.randomized', function (event, eventData) {
+            self._block(false);
+        });
 
         this._initAddNewVariant();
         this._initDeleteVariant();
         this._initRandomizeVariant();
     }
 
+    _block(isBlock) {
+        this._isBlocked = isBlock;
+        this._addButton.prop('disabled', isBlock);
+        this._addInput.prop('disabled', isBlock);
+        this._elementList.find('.deleteVariantButton').prop('disabled', isBlock);
+        this._randomizeButton.prop('disabled', isBlock);
+    }
+
     _initAddNewVariant() {
         let self = this;
         let input = this._addInput;
 
-        this._addButton.on('click', function () {
+        this._addButton.on('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (self._isBlocked) {
+                return;
+            }
             self.formSubmitted(input, self);
         });
 
         this._addInput.keypress(function (e) {
+            if (self._isBlocked) {
+                return;
+            }
+
             if (e.which === 13) {
                 self.formSubmitted(input, self)
                 return false;
@@ -55,7 +86,13 @@ class UserInterfaceView
     _initDeleteVariant() {
         let self = this;
 
-        this._deleteButton.live('click', function () {
+        if (self._isBlocked) {
+            return;
+        }
+
+        this._deleteButton.live('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
            let id = $(this).prev().text();
             self._eventManager.publish(
                new Event('clicked.variant.delete', id)
@@ -65,6 +102,11 @@ class UserInterfaceView
 
     _initRandomizeVariant() {
         let self = this;
+
+        if (self._isBlocked) {
+            return;
+        }
+
         this._randomizeButton.on('click', function (event) {
             event.preventDefault();
             event.stopPropagation();

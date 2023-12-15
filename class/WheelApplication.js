@@ -1,30 +1,25 @@
 class WheelApplication {
 
-    constructor(title, label) {
+    constructor(id, title) {
         this._eventManager = new EventManager();
-        this._storage = new Storage(label);
+        this._storage = new StateStorage(id);
         this._state = this._storage.load();
-        console.log(this._state);
         this._variantList = this._state.variantList;
-        this._colorStack = new ColorsStack(this._variantList.getColors());
-        new ApplicationView(label, title, this._eventManager, this._state);
+        this._colorStack = new ColorsStack(this._variantList.colors);
+        new ApplicationView(id, title, this._eventManager, this._state);
         this._initEvents();
     }
 
     _initEvents() {
         let self = this;
         this._eventManager.subscribe('clicked.variant.add', function (event, eventData) {
-            self.addNewVariant(eventData.value);
-            self._eventManager.publish(new Event('variant.added'));
-            self._storage.save(self._state);
+            let labelVariant = eventData.value;
+            self.addVariant(labelVariant);
         });
 
         this._eventManager.subscribe('clicked.variant.delete', function (event, eventData) {
             let id = eventData.value;
-            let pickedVariant = self._variantList.variants[id];
-            self.deleteVariant(pickedVariant);
-            self._eventManager.publish(new Event('variant.deleted', pickedVariant));
-            self._storage.save(self._state);
+            self.deleteVariant(id);
         });
 
         this._eventManager.subscribe('clicked.variant.randomize', function () {
@@ -32,35 +27,67 @@ class WheelApplication {
         });
 
         this._eventManager.subscribe('variant.randomized', function (event, eventData) {
-            self._variantList.lastPicked = eventData.value;
+            self._storage.save(self._state);
+        });
+
+        this._eventManager.subscribe('variant.deleted', function () {
+            self._storage.save(self._state);
+        });
+
+        this._eventManager.subscribe('variant.added', function () {
             self._storage.save(self._state);
         });
     }
 
     randomize() {
-        let variants = this._variantList.getNoPicked();
-        let count = variants.length;
-
-        if (count === 0) {
+        if (this._state.wheel.isRunning) {
             return;
         }
 
-        this._variantList.lastPicked = -1;
+        let variants = this._variantList.noDrawnVariants();
+        let count = variants.length;
+
+        if (count <= 1) {
+            return;
+        }
+
         let rndVariantIndex = Math.floor(Math.random() * count);
         let variant = variants[rndVariantIndex];
+        variant.isDrawn = true;
+        this._variantList._lastDrawn = variant;
         this._eventManager.publish(new Event('variant.randomize', variant));
     }
 
-    addNewVariant(labelVariant) {
-        let newId = this._variantList.variants.length;
-        let color = this._colorStack.pop();
-        let variant = new Variant(newId, labelVariant,color);
-        this._variantList.addVariant(variant);
+    addVariant(labelVariant) {
+        if (this._state.wheel.isRunning) {
+            return;
+        }
+
+        let variant = this._createNewVariant(labelVariant);
+        this._variantList.add(variant);
+        this._eventManager.publish(new Event('variant.added'));
     }
 
-    deleteVariant(variant) {
-        this._variantList.deleteVariant(variant.id);
+    deleteVariant(variantId) {
+        if (this._state.wheel.isRunning) {
+            return;
+        }
+
+        let variant = this._variantList.variants[variantId];
+        if (this._state.variantList.lastDrawn.id == variantId) {
+            console.log( this._state.variantList.lastDrawn);
+            this._state.variantList.lastDrawn = new Variant();
+        }
+
         this._colorStack.push(variant.color);
+        this._variantList.delete(variant.id);
+        this._eventManager.publish(new Event('variant.deleted', variant));
+    }
+
+    _createNewVariant(labelVariant) {
+        let nextId = this._variantList.variants.length;
+        let color = this._colorStack.pop();
+        return new Variant(nextId, labelVariant, color);
     }
 }
 

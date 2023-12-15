@@ -13,8 +13,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
     <script src="class/dto/Variant.js"></script>
     <script src="class/dto/VariantList.js"></script>
+    <script src="class/dto/Wheel.js"></script>
     <script src="class/data/ColorsStack.js"></script>
-    <script src="class/data/Storage.js"></script>
+    <script src="class/data/StateStorage.js"></script>
     <script src="class/data/State.js"></script>
     <script src="class/view/UserInterfaceView.js"></script>
     <script src="class/view/VariantListView.js"></script>
@@ -52,7 +53,7 @@
 </section>
 </body>
 <script>
-    new WheelApplication('Колесо важных дел', 'i-want-it');
-   // new VariantRandomizeCore('Колесо хочух', 'i-wish-it');
+    new WheelApplication('i-want-it', 'Колесо важных дел');
+    new WheelApplication('i-wish-it', 'Колесо НЕ МЕНЕЕ ВАЖНЫХ хочух');
 </script>
 </html>

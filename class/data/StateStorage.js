@@ -1,4 +1,4 @@
-class Storage {
+class StateStorage {
     constructor(key) {
         this.key = key;
         this.localStorage = localStorage;
@@ -10,31 +10,33 @@ class Storage {
             return this._createNullState();
         }
 
-        let {wheelDegrees, variantList} = this._createFromStorageLoad(loadedState);
+        let {wheel, variantList} = this._createFromStorageLoad(loadedState);
 
-        return new State(variantList, wheelDegrees);
+        return new State(variantList, wheel);
     }
 
     _createFromStorageLoad(loadedState) {
         let variants = this._getVariants(loadedState._variantList._variants);
-        let wheelDegrees = loadedState._wheelDegrees;
-
-        let lastPicked = new Variant(
-            loadedState._variantList._lastPicked._id,
-            loadedState._variantList._lastPicked._label,
-            loadedState._variantList._lastPicked._color,
-            loadedState._variantList._lastPicked._hasPicked,
+        let lastDrawn = new Variant(
+            loadedState._variantList._lastDrawn._id,
+            loadedState._variantList._lastDrawn._label,
+            loadedState._variantList._lastDrawn._color,
+            loadedState._variantList._lastDrawn.isDrawn,
         );
 
-        let variantList = new VariantList(loadedState._label, lastPicked, variants);
-        return {wheelDegrees, variantList};
+        let variantList = new VariantList(loadedState._label, lastDrawn, variants);
+        let wheel = new Wheel(loadedState._wheel._degrees, loadedState._wheel.isRunning);
+
+        return {wheel, variantList};
     }
 
     _createNullState() {
         return new State(
-            new VariantList(this.key,
+            new VariantList(
+                this.key,
                 new Variant()
-            )
+            ),
+            new Wheel()
         )
     }
 
@@ -45,7 +47,7 @@ class Storage {
                 loadedVariant._id,
                 loadedVariant._label,
                 loadedVariant._color,
-                loadedVariant._hasPicked,
+                loadedVariant._isDrawn,
             );
             result.push(variant);
         });
