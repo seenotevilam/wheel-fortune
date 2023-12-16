@@ -13,7 +13,7 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-RUN mkdir /db
+RUN mkdir -p /usr/src/app/db
 
 RUN npm run build
 RUN npm run migrate
