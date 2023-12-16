@@ -4,7 +4,7 @@ module.exports = {
     entry: './index.js',
     output: {
         filename: 'bundle.js', // Имя выходного файла сборки
-        path: path.resolve(__dirname, 'dist'), // Путь для выходного файла сборки
+        path: path.resolve(__dirname, 'public/js'), // Путь для выходного файла сборки
     },
     resolve: {
         fallback: {
