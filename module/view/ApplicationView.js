@@ -1,14 +1,9 @@
-class ApplicationView {
-    constructor(id, title, eventManager, state) {
-        this._$view  = $('#' + id);
+module.exports = class ApplicationView {
+    constructor(view, title, eventManager, state) {
+        this._$view  = view;
         this._$view.html(this._template());
         this._eventManager = eventManager;
         this._variantList = state.variantList;
-
-        new VariantListView(id, this._$view, title, this._eventManager, this._variantList);
-        new WheelView(this._$view, this._eventManager, this._variantList, state.wheel);
-        new UserInterfaceView(this._$view, this._eventManager, state.isBlocked);
-        new InformationView(this._$view, this._eventManager, state.variantList.lastDrawn);
     }
 
     _template() {
@@ -52,7 +47,7 @@ class ApplicationView {
             "                    </div>\n" +
             "                    <div style=\"clear: both\"></div>\n" +
             "                    <div class=\"anime__details__btn\">\n" +
-            "                        <button href=\"\" class=\"randomVariantButton disabled follow-btn\"><i class=\"fa fa-heart-o\"></i>\n" +
+            "                        <button href=\"\" class=\"randomVariantButton disabled follow-btn\"><i module=\"fa fa-heart-o\"></i>\n" +
             "                            Крутите барабан</button>\n" +
             "                    </div>\n" +
             "                </div>\n" +

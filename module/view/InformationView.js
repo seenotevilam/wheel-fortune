@@ -1,4 +1,4 @@
-class InformationView {
+module.exports = class InformationView {
     constructor(element, eventManager, currentVariant) {
         this._currentVaraint = currentVariant;
         this._eventManager = eventManager;

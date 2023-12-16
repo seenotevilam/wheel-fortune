@@ -1,12 +1,14 @@
-class WheelApplication {
+let Variant = require('/module/dto/Variant');
+let Event = require('/module/core/Event');
 
-    constructor(id, title) {
-        this._eventManager = new EventManager();
-        this._storage = new StateStorage(id);
-        this._state = this._storage.load();
-        this._variantList = this._state.variantList;
-        this._colorStack = new ColorsStack(this._variantList.colors);
-        new ApplicationView(id, title, this._eventManager, this._state);
+module.exports = class WheelApplication {
+
+    constructor(id, title, eventManager, storageState, colorStack, state) {
+        this._eventManager = eventManager;
+        this._storage = storageState;
+        this._state = state;
+        this._variantList = state.variantList;
+        this._colorStack = colorStack;
         this._initEvents();
     }
 
@@ -65,6 +67,7 @@ class WheelApplication {
 
         let variant = this._createNewVariant(labelVariant);
         this._variantList.add(variant);
+
         this._eventManager.publish(new Event('variant.added'));
     }
 
@@ -74,6 +77,7 @@ class WheelApplication {
         }
 
         let variant = this._variantList.variants[variantId];
+
         if (this._state.variantList.lastDrawn.id == variantId) {
             console.log( this._state.variantList.lastDrawn);
             this._state.variantList.lastDrawn = new Variant();

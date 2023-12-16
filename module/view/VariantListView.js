@@ -1,4 +1,4 @@
-class VariantListView {
+module.exports = class VariantListView {
     constructor(label, element, title, eventManager, variantList) {
         this._list = new List(label, {
             valueNames: ['label', 'id', 'isDrawn']
@@ -51,16 +51,14 @@ class VariantListView {
     _getVariantListElements(variants) {
         let variantsListElements = []
         variants.forEach(function (variant) {
-            if (variant instanceof Variant) {
-                variantsListElements.push(
-                    {
-                        'label': variant.id +  1 +' ' + variant.label,
-                        'id': variant.id,
-                        'isDrawn': variant.isDrawn,
-                        'color': variant.color
-                    }
-                );
-            }
+            variantsListElements.push(
+                {
+                    'label': variant.id +  1 +' ' + variant.label,
+                    'id': variant.id,
+                    'isDrawn': variant.isDrawn,
+                    'color': variant.color
+                }
+            );
         });
 
         return variantsListElements;

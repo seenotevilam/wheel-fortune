@@ -1,4 +1,4 @@
-# Use Node.js v14
+# Use Node.module v14
 FROM node:14
 
 # Create app directory
@@ -16,4 +16,4 @@ COPY . .
 # Expose the port
 EXPOSE 3000
 
-CMD [ "node", "app.js" ]
+CMD [ "node", "index.js" ]

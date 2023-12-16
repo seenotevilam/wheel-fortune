@@ -1,4 +1,6 @@
-class VariantList {
+let Variant = require('/module/dto/Variant');
+
+module.exports = class VariantList {
     constructor(label, lastDrawn = null, variants = []) {
         this._label = label;
         this._variants = variants;
@@ -29,9 +31,6 @@ class VariantList {
     }
 
     add(variant) {
-        if (!variant instanceof Variant) {
-            return;
-        }
         this._variants.push(variant);
     }
 

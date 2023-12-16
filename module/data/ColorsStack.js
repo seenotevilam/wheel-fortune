@@ -1,4 +1,4 @@
-class ColorsStack {
+module.exports = class ColorsStack {
 
     static defaultColors = [
         '#00d25b',

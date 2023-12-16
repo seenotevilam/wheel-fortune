@@ -1,4 +1,6 @@
-class UserInterfaceView
+let Event = require('/module/core/Event');
+
+module.exports = class UserInterfaceView
 {
     constructor(elementList, eventManager, isBlocked = false) {
         this._elementList = elementList;
@@ -20,9 +22,6 @@ class UserInterfaceView
 
     _initEvents() {
         let self = this;
-        if (!this._eventManager instanceof EventManager) {
-            return;
-        }
 
         this._eventManager.subscribe('clicked.variant.randomize', function (event, eventData) {
             self._block(true);

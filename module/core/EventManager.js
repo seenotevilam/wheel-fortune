@@ -1,4 +1,4 @@
-class EventManager {
+module.exports = class EventManager {
     subscribe(eventName, fn) {
         $(this).bind(eventName, fn);
     }

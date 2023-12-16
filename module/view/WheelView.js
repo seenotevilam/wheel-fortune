@@ -1,4 +1,6 @@
-class WheelView {
+let Event = require('/module/core/Event');
+
+module.exports = class WheelView {
     constructor(element, eventManager, variantList, wheel) {
         this._eventManager = eventManager;
         this._wheel = wheel;
@@ -159,7 +161,7 @@ class WheelView {
     }
 
     _template() {
-        return "<div class=\"arrow\"></div>\n" +
+        return "<div class= \"arrow\"></div>\n" +
             "<div class=\"wheel wheel_drum\">\n" +
             "   <ul class=\"wheel_text\">" +
             "   </ul>\n" +

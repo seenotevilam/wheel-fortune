@@ -1,4 +1,9 @@
-class StateStorage {
+let State = require('/module/data/State');
+let Variant = require('/module/dto/Variant');
+let VariantList = require('/module/dto/VariantList');
+let Wheel = require('/module/dto/Wheel');
+
+module.exports = class StateStorage {
     constructor(key) {
         this.key = key;
         this.localStorage = localStorage;

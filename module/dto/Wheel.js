@@ -1,4 +1,4 @@
-class Wheel {
+module.exports = class Wheel {
     constructor(degrees = 0, isRunning = false) {
         this._degrees = degrees;
         this._isRunning = isRunning;

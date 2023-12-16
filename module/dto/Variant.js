@@ -1,4 +1,4 @@
-class Variant {
+module.exports = class Variant {
     constructor(id = -1, label = "", color = "", isDrawn = false) {
         this._id = id;
         this._label = label;

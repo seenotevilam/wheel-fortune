@@ -1,4 +1,4 @@
-class Event {
+module.exports = class Event {
     constructor(name, value = undefined) {
         this._value = value;
         this._name = name;

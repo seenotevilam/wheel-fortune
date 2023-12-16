@@ -1,4 +1,4 @@
-class State {
+module.exports = class State {
     constructor(variantList, wheel) {
         this._variantList = variantList;
         this._wheel = wheel;
