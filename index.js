@@ -13,30 +13,28 @@ let VariantListView = require('./module/view/VariantListView');
 let WheelView = require('./module/view/WheelView');
 let WheelApplication = require('./module/WheelApplication');
 
-
 function createWheel(id, title) {
-    let view = $('#' + id);
     let stateStorage = new StateStorage(id);
-    let state = stateStorage.load();
-    let eventManager = new EventManager();
-    let colorStack = new ColorStack();
+    stateStorage.load().then(state => {
+        let view = $('#' + id);
+        let eventManager = new EventManager();
+        let colorStack = new ColorStack();
 
-    let applicationView = new ApplicationView(
-        view, title, eventManager, state
-    );
-    let variantList = new VariantListView(id, view, title, eventManager, state.variantList);
-    let wheelView = new WheelView(view, eventManager, state.variantList, state.wheel);
-    let userInterfaceView  = new UserInterfaceView(view, eventManager);
-    let informationView = new InformationView(view, eventManager, state.variantList.lastDrawn);
+        let applicationView = new ApplicationView(
+            view, title, eventManager, state
+        );
+        let variantList = new VariantListView(id, view, title, eventManager, state.variantList);
+        let wheelView = new WheelView(view, eventManager, state.variantList, state.wheel);
+        let userInterfaceView = new UserInterfaceView(view, eventManager);
+        let informationView = new InformationView(view, eventManager, state.variantList.lastDrawn);
 
-    new WheelApplication(
-        view,
-        title,
-        eventManager,
-        stateStorage,
-        colorStack,
-        state
-    );
+        new WheelApplication(
+            eventManager,
+            stateStorage,
+            colorStack,
+            state
+        );
+    });
 }
 
 createWheel('i-want-it','Колесо важных дел');

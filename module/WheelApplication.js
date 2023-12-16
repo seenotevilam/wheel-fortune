@@ -3,7 +3,7 @@ let Event = require('/module/core/Event');
 
 module.exports = class WheelApplication {
 
-    constructor(id, title, eventManager, storageState, colorStack, state) {
+    constructor(eventManager, storageState, colorStack, state) {
         this._eventManager = eventManager;
         this._storage = storageState;
         this._state = state;

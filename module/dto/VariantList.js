@@ -1,14 +1,14 @@
 let Variant = require('/module/dto/Variant');
 
 module.exports = class VariantList {
-    constructor(label, lastDrawn = null, variants = []) {
-        this._label = label;
+    constructor(id, lastDrawn = null, variants = []) {
+        this._id = id;
         this._variants = variants;
         this._lastDrawn = lastDrawn === null ? new Variant() : lastDrawn;
     }
 
-    get label() {
-        return this._label;
+    get id() {
+        return this._id;
     }
 
     get variants() {

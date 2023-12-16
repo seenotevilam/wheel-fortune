@@ -4,20 +4,25 @@ let VariantList = require('/module/dto/VariantList');
 let Wheel = require('/module/dto/Wheel');
 
 module.exports = class StateStorage {
-    constructor(key) {
-        this.key = key;
-        this.localStorage = localStorage;
+    constructor(applicationId) {
+        this._applicationId = applicationId;
     }
 
-    load() {
-        let loadedState = JSON.parse(this.localStorage.getItem(this.key));
-        if (loadedState === null) {
-            return this._createNullState();
-        }
+    async load() {
+        return await fetch('/state/' + this._applicationId, {
+            'content-type': 'application/json',
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (Object.keys(data).length === 0) {
+                    return this._createNullState();
+                }
 
-        let {wheel, variantList} = this._createFromStorageLoad(loadedState);
-
-        return new State(variantList, wheel);
+                let {wheel, variantList} = this._createFromStorageLoad(data);
+                return new State(variantList, wheel);
+            });
     }
 
     _createFromStorageLoad(loadedState) {
@@ -29,7 +34,7 @@ module.exports = class StateStorage {
             loadedState._variantList._lastDrawn.isDrawn,
         );
 
-        let variantList = new VariantList(loadedState._label, lastDrawn, variants);
+        let variantList = new VariantList(loadedState._id, lastDrawn, variants);
         let wheel = new Wheel(loadedState._wheel._degrees, loadedState._wheel.isRunning);
 
         return {wheel, variantList};
@@ -38,7 +43,7 @@ module.exports = class StateStorage {
     _createNullState() {
         return new State(
             new VariantList(
-                this.key,
+                this._applicationId,
                 new Variant()
             ),
             new Wheel()
@@ -60,11 +65,13 @@ module.exports = class StateStorage {
         return result;
     }
 
-    save(state) {
-        this.localStorage.setItem(this.key, JSON.stringify(state));
-    }
-
-    delete() {
-        this.localStorage.removeItem(this.key);
+    async save(state) {
+        await fetch('/state/' + this._applicationId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(state)
+        });
     }
 }

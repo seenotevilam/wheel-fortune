@@ -9,10 +9,14 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install
-RUN npm build
 
 # Bundle app source
 COPY . .
+
+RUN mkdir /db
+
+RUN npm run build
+RUN npm run migrate
 
 # Expose the port
 EXPOSE 3000
