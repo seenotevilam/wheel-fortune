@@ -79,7 +79,6 @@ module.exports = class WheelApplication {
         let variant = this._variantList.variants[variantId];
 
         if (this._state.variantList.lastDrawn.id == variantId) {
-            console.log( this._state.variantList.lastDrawn);
             this._state.variantList.lastDrawn = new Variant();
         }
 
