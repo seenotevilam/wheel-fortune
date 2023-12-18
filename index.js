@@ -15,6 +15,7 @@ let WheelApplication = require('./module/WheelApplication');
 
 function createWheel(id, title) {
     let stateStorage = new StateStorage(id);
+
     stateStorage.load().then(state => {
         let view = $('#' + id);
         let eventManager = new EventManager();
@@ -39,5 +40,3 @@ function createWheel(id, title) {
 
 createWheel('i-want-it','Колесо важных дел');
 createWheel('i-wish-it','Колесо Хочух');
-
-

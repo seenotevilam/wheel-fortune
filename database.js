@@ -1,5 +1,20 @@
-const sqlite3 = require('sqlite3').verbose();
+const {MongoClient, ServerApiVersion} = require('mongodb');
 
-const DB_NAME = './db/application.sqlite';
+require('dotenv').config()
 
-module.exports = new sqlite3.Database(DB_NAME);
+let user = process.env.DB_USER;
+let password = process.env.DB_PASSWORD;
+let host = process.env.DB_HOST;
+let dbname = process.env.DB_NAME;
+
+let uri = 'mongodb+srv://' + user + ':' + password +'@' + host;
+
+let client = new MongoClient(uri, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
+
+module.exports = client.db(dbname);

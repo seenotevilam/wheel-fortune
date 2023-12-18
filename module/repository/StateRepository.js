@@ -3,26 +3,18 @@ module.exports = class StateRepository {
         this._db = db;
     }
 
-    save(applicationId, state) {
-        let sql = `INSERT
-        OR REPLACE 
-               INTO application_state(application_id, state) 
-               VALUES(?, ?)`;
+    async save(applicationId, state) {
+        let collection = this._db.collection("application_states");
 
-        this._db.run(sql, [applicationId, state], (err, row) => {});
+        let query = { applicationId: applicationId };
+        let update = { $set: { applicationId: applicationId, state: state }};
+        let options = { upsert: true };
+        await collection.updateOne(query, update, options);
     }
 
-    get(applicationId, cb) {
-        let sql = `SELECT state
-                   FROM application_state
-                   WHERE application_id = ?`;
-
-        this._db.get(sql, [applicationId], (err, row) => {
-            if (row) {
-                return cb(row.state);
-            } else {
-                cb();
-            }
-        });
+    async get(applicationId) {
+        let collection = this._db.collection("application_states");
+        let result = await collection.findOne({applicationId: applicationId});
+        return result !== null ? result.state : null;
     }
 }

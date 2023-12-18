@@ -4,45 +4,26 @@ module.exports = class TokenRepository {
         this._db = db;
     }
 
-    get(token, cb) {
-        let sql = `SELECT token, login
-                   FROM token
-                   WHERE token = ?`;
-
-        let findToken = null;
-
-        this._db.get(sql, [token], (err, row) => {
-            if (row) {
-                findToken = new Token(row.login, row.token);
-            }
-            cb(findToken);
-        });
+    async get(token) {
+        let collection = this._db.collection("tokens");
+        let tokenFind = await collection.findOne({token: token})
+        return tokenFind !== null ? new Token(tokenFind.login, tokenFind.token) : null;
     }
 
-    delete(token, cb) {
-        let sql = `DELETE FROM token WHERE token = ?`;
+    async delete(token) {
+        let collection = this._db.collection("tokens");
 
-        this._db.run(sql, [token], (err, row) => {
-            if (err) {
-                cb(false);
-            } else {
-                cb(true);
-            }
-        });
+        return await collection.deleteOne({token: token})
     }
 
-    save(token, cb) {
-        let sql = `INSERT
-        OR REPLACE 
-               INTO token(token, login) 
-               VALUES(?, ?)`;
+    async save(token) {
+        let collection = this._db.collection("tokens");
 
-        this._db.run(sql, [token.token, token.login], (err, row) => {
-            if (err) {
-                cb(false);
-            } else {
-                cb(true);
+        await collection.insertOne(
+            {
+                token: token.token,
+                login: token.login
             }
-        });
+        );
     }
 }

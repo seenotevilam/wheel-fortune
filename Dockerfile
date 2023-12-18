@@ -1,5 +1,5 @@
 # Use Node.module v14
-FROM node:14
+FROM node:21
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -16,7 +16,6 @@ COPY . .
 RUN mkdir -p /usr/src/app/db
 
 RUN npm run build
-RUN npm run migrate
 
 # Expose the port
 EXPOSE 3000

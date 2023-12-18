@@ -4,19 +4,10 @@ module.exports = class UserRepository {
         this._db = db;
     }
 
-    get(login, cb) {
-        let sql = `SELECT login, password
-                   FROM user
-                   WHERE login = ?`;
+    async get(login) {
+        let collection = this._db.collection("users");
+        let userFind = await collection.findOne({'login': login});
 
-        let user = null;
-
-        this._db.get(sql, [login], (err, row) => {
-            if (row) {
-                user = new User(row.login, row.password);
-            }
-            cb(user);
-        });
+        return userFind !== null ? new User(userFind.login, userFind.password) : null;
     }
-
 }

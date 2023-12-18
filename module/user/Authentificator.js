@@ -5,17 +5,13 @@ module.exports =  class Authentificator {
         this._userRepository = userRepository;
     }
 
-    getUser(cb) {
-        let self = this;
+    async getUser() {
         let tokenUser = this._storageToken.get();
-        this._tokenRepository.get(tokenUser, function (token){
-            if (token === null) {
-                cb(null);
-                return;
-            }
-            self._userRepository.get(token.login, function (user){
-                cb(user);
-            });
-        });
+        let token = await this._tokenRepository.get(tokenUser);
+        if (token === null) {
+            return null;
+        }
+
+        return await this._userRepository.get(token.login);
     }
 }

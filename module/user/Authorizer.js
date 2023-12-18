@@ -8,38 +8,33 @@ module.exports = class Authorizer {
         this._tokenRepository = tokenRepository;
     }
 
-    signup(login, password, cb) {
+    async signup(login, password) {
         let self = this;
 
-        this._userRepository.get(login, function (user) {
-            if (user === null) {
-                return cb(false);
-            }
+        let user = await this._userRepository.get(login);
 
-            let hashPassword = crypto.createHash('sha256')
-                .update(password)
-                .digest('hex');
+        if (user === null) {
+            return null;
+        }
 
-            if (!user.hasEqualPassword(hashPassword)) {
-                return cb(false);
-            }
+        let hashPassword = crypto.createHash('sha256')
+            .update(password)
+            .digest('hex');
 
-            let token = self._storageToken.generate();
-            self._tokenRepository.save(new Token(login, token), function (isSuccess) {
-                if (isSuccess) {
-                    self._storageToken.set(token);
-                }
-                cb(isSuccess);
-            });
-        });
+        if (!user.hasEqualPassword(hashPassword)) {
+            return null;
+        }
+
+        let token = self._storageToken.generate();
+        await this._tokenRepository.save(new Token(login, token));
+        this._storageToken.set(token);
+
+        return true;
     }
 
-    logout(cb) {
+    async logout() {
         let token = this._storageToken.get();
-        let self = this;
-        this._tokenRepository.delete(token, function (isSuccess) {
-            self._storageToken.delete();
-            cb(isSuccess);
-        })
+        await this._tokenRepository.delete(token);
+        this._storageToken.delete();
     }
 }
