@@ -1,5 +1,5 @@
 # Use Node.module v14
-FROM node:21
+FROM node:16
 
 # Create app directory
 WORKDIR /usr/src/app
