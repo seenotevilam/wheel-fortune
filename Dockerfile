@@ -1,5 +1,5 @@
-# Use Node.module v14
-FROM node:16
+# Use Node.module v16
+FROM node:16-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -12,8 +12,6 @@ RUN npm install
 
 # Bundle app source
 COPY . .
-
-RUN mkdir -p /usr/src/app/db
 
 RUN npm run build
 
