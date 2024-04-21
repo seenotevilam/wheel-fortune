@@ -1,7 +1,7 @@
-let State = require('/module/data/State');
-let Variant = require('/module/dto/Variant');
-let VariantList = require('/module/dto/VariantList');
-let Wheel = require('/module/dto/Wheel');
+let State = require('/module/client/data/State');
+let Variant = require('/module/client/dto/Variant');
+let VariantList = require('/module/client/dto/VariantList');
+let Wheel = require('/module/client/dto/Wheel');
 
 module.exports = class StateStorage {
     constructor(applicationId) {

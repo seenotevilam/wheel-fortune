@@ -1,5 +1,5 @@
-let Variant = require('/module/dto/Variant');
-let Event = require('/module/core/Event');
+let Variant = require('/module/client/dto/Variant');
+let Event = require('/module/client/core/Event');
 
 module.exports = class WheelApplication {
 

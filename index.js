@@ -1,17 +1,18 @@
-let Event = require('./module/core/Event');
-let EventManager = require('./module/core/EventManager');
-let ColorStack = require('./module/data/ColorsStack');
-let State = require('./module/data/State');
-let StateStorage = require('./module/data/StateStorage');
-let Variant = require('./module/dto/Variant');
-let VariantList = require('./module/dto/VariantList');
-let Wheel = require('./module/dto/Wheel');
-let ApplicationView = require('./module/view/ApplicationView');
-let InformationView = require('./module/view/InformationView');
-let UserInterfaceView = require('./module/view/UserInterfaceView');
-let VariantListView = require('./module/view/VariantListView');
-let WheelView = require('./module/view/WheelView');
+let Event = require('./module/client/core/Event');
+let EventManager = require('./module/client/core/EventManager');
+let ColorStack = require('./module/client/data/ColorsStack');
+let State = require('./module/client/data/State');
+let StateStorage = require('./module/client/data/StateStorage');
+let Variant = require('./module/client/dto/Variant');
+let VariantList = require('./module/client/dto/VariantList');
+let Wheel = require('./module/client/dto/Wheel');
+let ApplicationView = require('./module/client/view/ApplicationView');
+let InformationView = require('./module/client/view/InformationView');
+let UserInterfaceView = require('./module/client/view/UserInterfaceView');
+let VariantListView = require('./module/client/view/VariantListView');
+let WheelView = require('./module/client/view/WheelView');
 let WheelApplication = require('./module/WheelApplication');
+let Bayes = require('./module/client/bayes/Bayes');
 
 function createWheel(id, title) {
     let stateStorage = new StateStorage(id);
@@ -38,5 +39,11 @@ function createWheel(id, title) {
     });
 }
 
+function createBayes() {
+    let bayes = new Bayes();
+}
+
 createWheel('i-want-it','Колесо важных дел');
 createWheel('i-wish-it','Колесо Хочух');
+createBayes();
+

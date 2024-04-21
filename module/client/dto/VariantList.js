@@ -1,4 +1,4 @@
-let Variant = require('/module/dto/Variant');
+let Variant = require('/module/client/dto/Variant');
 
 module.exports = class VariantList {
     constructor(id, lastDrawn = null, variants = []) {

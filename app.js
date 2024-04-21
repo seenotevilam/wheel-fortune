@@ -1,9 +1,9 @@
-const StateRepository = require('./module/repository/StateRepository');
-const Authorizer = require('./module/user/Authorizer');
-const Authentificator = require('./module/user/Authentificator');
-const TokenStorage = require('./module/user/TokenCookieStorage');
-const TokenRepository = require('./module/user/TokenRepository');
-const UserRepository = require('./module/user/UserRepository');
+const StateRepository = require('./module/server/repository/StateRepository');
+const Authorizer = require('./module/server/user/Authorizer');
+const Authentificator = require('./module/server/user/Authentificator');
+const TokenStorage = require('./module/server/user/TokenCookieStorage');
+const TokenRepository = require('./module/server/user/TokenRepository');
+const UserRepository = require('./module/server/user/UserRepository');
 
 let db = require('./database');
 
@@ -18,6 +18,8 @@ const app = express();
 app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/js', express.static(__dirname + '/public/js'));
 app.use('/fonts', express.static(__dirname + '/public/fonts'));
+app.use('/img', express.static(__dirname + '/public/img'));
+
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(cookieParser());
@@ -38,6 +40,7 @@ app.use("/", async function (request, response, next) {
 
     next();
 })
+
 app.get("/", function (request, response) {
     response.sendFile(__dirname + '/public/index.html');
 });

@@ -13,6 +13,10 @@ module.exports = class Authorizer {
 
         let user = await this._userRepository.get(login);
 
+        console.log('login');
+        console.log(user);
+        console.log('login');
+
         if (user === null) {
             return null;
         }
@@ -20,6 +24,10 @@ module.exports = class Authorizer {
         let hashPassword = crypto.createHash('sha256')
             .update(password)
             .digest('hex');
+
+
+        console.log(hashPassword);
+        console.log(user);
 
         if (!user.hasEqualPassword(hashPassword)) {
             return null;

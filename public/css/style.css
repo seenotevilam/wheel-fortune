@@ -2405,5 +2405,12 @@ ol {
 	font-size: 24px;
 	transform-origin: center right;
 	user-select: none;
+}
 
+p {
+	color: #ffffff;
+}
+
+#ProbabilityResult {
+	color: #ffffff;
 }

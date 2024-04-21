@@ -1,4 +1,4 @@
-let Event = require('/module/core/Event');
+let Event = require('/module/client/core/Event');
 
 module.exports = class UserInterfaceView
 {

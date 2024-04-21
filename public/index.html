@@ -44,6 +44,68 @@
         </div>
     </div>
 </section>
+
+<section class="anime-details spad">
+    <div class="container text-center">
+
+        <div class="anime__details__title">
+            <h3 class="Title">Формула Байеса</h3>
+        </div>
+
+        <div class="anime__review__item">
+            <img src="img/bayes.png" alt="Байес">
+        </div>
+
+        <div style="margin: 80px auto auto;" class="col-md-6">
+            <h4 id="ProbabilityResult" style="display: block; margin-bottom: 20px;">
+            </h4>
+
+            <div class="row anime__review__item">
+                <label style="margin-left: 20px;" class="form-label" for="ProbabilityEventAValue">
+                    <input class="form-control" id="ProbabilityEventAValue" placeholder="Событие A" value="Человек болен"/>
+                </label>
+                <label style="margin-left: 20px;" class="form-label" for="ProbabilityEventAPercent">
+                    <input style="width: 100px;" class="form-control" id="ProbabilityEventAPercent" placeholder="A%"
+                           value="0.51"/>
+                </label>
+            </div>
+
+            <div class="row anime__review__item">
+                <label style="margin-left: 20px;" class="form-label" for="ProbabilityEventBValue">
+                    <input class="form-control" id="ProbabilityEventBValue" placeholder="Событие B" value="Положительный тест"/>
+                </label>
+                <label style="margin-left: 20px;" class="form-label" for="ProbabilityEventBPercent">
+                    <input style="width: 100px;" class="form-control" id="ProbabilityEventBPercent" placeholder="B%"
+                           value="3.469"/>
+                </label>
+            </div>
+
+            <div class="row anime__review__item">
+                <label style="margin-left: 20px;" class="form-label" for="ProbabilityEventBAPercent">
+                    <input style="width: 100px;" class="form-control" id="ProbabilityEventBAPercent"
+                           placeholder="B/A%"
+                           value="95"/>
+                </label>
+            </div>
+
+            <div style="text-align: center;" class="row anime__details__btn">
+                <label style="margin-left: 20px;" class="form-label" for="ProbabilityEventCalculatorButton">
+                    <input class="follow-btn" type="button" value="Расчитать" id="ProbabilityEventCalculatorButton"/>
+                </label>
+            </div>
+            <div style="margin-top: 20px;" class="row anime__review__item section-title">
+                <p>Задача вычислить вероятность. Если тест на болезнь положительный - то какая вероятность у человека
+                    болезни? </p>
+                <p>A - Вероятность болезни (распространенность) = P(A) = 0.51% </p>
+                <p>B - Гипотеза. Полная вероятность положительного теста на болезнь (Как сумма вероятностей
+                    положительного теста для больного и здорового) = P(A) = 3.469% </p>
+                <p>B/A - Чувствительность, т.е. вероятность положительного результата теста больного P(A) = 95 </p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <script src="js/bundle.js"></script>
+
 </body>
 </html>
