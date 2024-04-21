@@ -45,11 +45,11 @@ module.exports = class ProbabilityEvent {
     getDescription()
     {
         if (this.eventSecondName == null) {
-            return "Вероятность " + this.eventFirstName + " равна " + this.percent;
+            return "Вероятность " + this.eventFirstName + " равна " + this.percent + "%";
         }
 
         return "Вероятность \" "
             + this.eventFirstName + " \" при \" " + this.eventSecondName
-            + " \" равна " + this.percent ;
+            + " \" равна " + this.percent + "%" ;
     }
 }
