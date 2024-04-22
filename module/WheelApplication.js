@@ -46,7 +46,7 @@ module.exports = class WheelApplication {
             return;
         }
 
-        let variants = this._variantList.noDrawnVariants();
+        let variants = this._variantList.variants;
         let count = variants.length;
 
         if (count <= 1) {

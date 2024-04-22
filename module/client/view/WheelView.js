@@ -18,26 +18,17 @@ module.exports = class WheelView {
     _initEvents() {
         let self = this;
         this._eventManager.subscribe('variant.added', function () {
-            if (self._variantList.lastDrawn.id > 0) {
-                return;
-            }
-
             self._wheel.degrees = 0;
             self._update();
         });
 
         this._eventManager.subscribe('variant.deleted', function (event, eventData) {
-            if (self._variantList.lastDrawn.id >= 0) {
-                return;
-            }
-
             self._wheel.degrees = 0;
             self._update();
         });
 
         this._eventManager.subscribe('variant.randomize', function (event, eventData) {
             let variant = eventData.value;
-            self._wheel.degrees = 0;
             self._update(variant);
             self._run(variant);
         });
@@ -54,7 +45,7 @@ module.exports = class WheelView {
     }
 
     _calculateDeltaDegrees(variantsForRenderSectors, winnerIndex) {
-        let variantsForRenderSectorsLength = variantsForRenderSectors.length;
+        let variantsForRenderSectorsLength = variantsForRenderSectors.length - winnerIndex;
         let rounds = 2 + Math.floor(Math.random() * 2);
         let wheelSectionsPath = rounds * variantsForRenderSectorsLength + (variantsForRenderSectorsLength - winnerIndex);
         let degSection = Math.round(360 / variantsForRenderSectorsLength);
@@ -78,8 +69,6 @@ module.exports = class WheelView {
         this._$block.show();
         this._$wheelContainer.html(this._template());
         this._$dram = $(this._$wheelContainer.find('.wheel_drum').get(0));
-        this._$dram.css('transform', 'rotate(' + this._wheel.degrees + 'deg)')
-
         this._$text = $(this._$wheelContainer.find('.wheel_text').get(0));
 
         let gradient = "";
@@ -103,11 +92,11 @@ module.exports = class WheelView {
         });
 
         this._$dram.css('background-image', 'conic-gradient(' + gradient + ')');
+        this._$dram.css('transform', 'rotate(' + this._wheel.degrees + 'deg)')
 
-        if (variantsForRenderSectors.length <= 1 && this._variantList.lastDrawn.id < 0) {
+        if (variantsForRenderSectors.length <= 1) {
             this._$block.hide();
         }
-
     }
 
     _run(winnerVariant) {
@@ -131,13 +120,15 @@ module.exports = class WheelView {
         $({deg: 0}).animate({deg: deltaDegrees}, {
             duration: 10000,
             step: function(now) {
+                let rotate = now + self._wheel.degrees;
+
                 self._$dram.css({
-                    transform: 'rotate(' + now + 'deg)'
+                    transform: 'rotate(' + rotate + 'deg)'
                 });
             },
             complete: function () {
                 self._wheel.isRunning = false;
-                self._wheel.degrees = deltaDegrees;
+                self._wheel.degrees = self._wheel.degrees % 360 + deltaDegrees;
                 self._eventManager.publish(new Event('variant.randomized', winnerVariant));
             }
         });
@@ -153,9 +144,7 @@ module.exports = class WheelView {
         let filterVariants = [];
 
         variants.forEach(function (variant) {
-            if (!variant.isDrawn || winnerVariant !== null && winnerVariant.id === variant.id) {
-                filterVariants.push(variant);
-            }
+            filterVariants.push(variant);
         })
         return filterVariants;
     }
